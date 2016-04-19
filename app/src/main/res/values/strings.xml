@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">TempleTrip</string>
     <string name="title_temple_detail">Temple Detail</string>
+    <string name="parseApplicationId">JUJurzhFM1UwVK1cY0JHyyJCw17ai5QH1cJ5F880</string>
+    <string name="parseServerUrl">http://templetrip-server.herokuapp.com/parse/</string>
+    <string name="parseClientId">9CWv8oo8D44QyF9FA41aeFYY8Fx8AVOS3sghINzP</string>
 </resources>
