@@ -1,13 +1,15 @@
 package com.ephraimhowardkunz.familymap.templetrip;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.ephraimhowardkunz.familymap.templetrip.Model.DataManager;
 import com.ephraimhowardkunz.familymap.templetrip.Model.Temple;
@@ -48,10 +50,7 @@ public class TempleDetailFragment extends Fragment {
             mItem = DataManager.getTempleById(getContext(), getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.getName());
-            }
+            activity.setTitle(mItem.getName());
         }
     }
 
@@ -60,10 +59,42 @@ public class TempleDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.temple_detail, container, false);
 
-        if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.temple_detail)).setText(mItem.getName());
-        }
+        setupViewElements(rootView);
 
         return rootView;
+    }
+
+    public void setupViewElements(View rootView){
+        ImageView imageView = (ImageView)rootView.findViewById(R.id.temple_detail_image);
+        DataManager.getTempleImage(getContext(), imageView, mItem);
+
+        Button mapButton = (Button)rootView.findViewById(R.id.temple_detail_map_button);
+        mapButton.setText(mItem.getAddress());
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("google.navigation:q=" + mItem.getAddress());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
+
+        Button webButton = (Button)rootView.findViewById(R.id.temple_detail_web_button);
+        webButton.setText(mItem.getWebViewUrl());
+        webButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    Uri uri = Uri.parse(mItem.getWebViewUrl());
+                    Intent i = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(i);
+                }
+                catch (Exception ex){
+                    assert false;
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 }

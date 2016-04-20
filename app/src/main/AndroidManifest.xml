@@ -31,6 +31,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ephraimhowardkunz.familymap.templetrip.TempleListActivity" />
         </activity>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="abd7e04d91a9cd3680a3cac4718edbb8b6044ad8"
+            />
     </application>
 
 </manifest>

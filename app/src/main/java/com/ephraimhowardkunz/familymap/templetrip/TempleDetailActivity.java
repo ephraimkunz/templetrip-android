@@ -19,7 +19,7 @@ public class TempleDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_temple_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        Toolbar toolbar =  (Toolbar)findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
         // Show the Up button in the action bar.

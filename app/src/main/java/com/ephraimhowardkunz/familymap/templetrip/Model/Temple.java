@@ -6,6 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 
 import io.realm.RealmList;
@@ -20,7 +24,7 @@ public class Temple extends RealmObject {
     private String id;
     private String name;
     private String webViewUrl;
-    private RealmDate dedication;
+    private String dedication; //Because it may read Construction, Renovation, etc.
     private String place;
     private String address;
     private String imageLink;
@@ -46,7 +50,7 @@ public class Temple extends RealmObject {
         this.setTelephone(o.getString("telephone"));
         this.setPlace(o.getString("place"));
         this.setFirstLetter(o.getString("name").substring(0, 1));
-        this.setDedication(new RealmDate(o.getString("dedication")));
+        this.setDedication(o.getString("dedication"));
         this.setId(o.getObjectId());
 
        // this.localImagePath
@@ -115,11 +119,20 @@ public class Temple extends RealmObject {
         this.webViewUrl = webViewUrl;
     }
 
-    public RealmDate getDedication() {
-        return dedication;
+    public String getDedication() {
+        try{
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = format.parse(dedication);
+            return DateFormat.getDateInstance().format(date);
+        }
+        catch (ParseException ex){
+            //Must not be a good date string, so just show it as is
+            return dedication;
+        }
     }
 
-    public void setDedication(RealmDate dedication) {
+    public void setDedication(String dedication) {
         this.dedication = dedication;
     }
 

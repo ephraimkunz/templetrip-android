@@ -12,13 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.ephraimhowardkunz.familymap.templetrip.Model.DataManager;
 import com.ephraimhowardkunz.familymap.templetrip.Model.Temple;
 import com.ephraimhowardkunz.familymap.templetrip.View.SimpleDividerItemDecoration;
 
 import java.util.List;
 
-import io.realm.RealmChangeListener;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * An activity representing a list of Temples. This activity
@@ -30,7 +31,6 @@ import io.realm.RealmChangeListener;
  */
 public class TempleListActivity extends AppCompatActivity {
     private final String TAG = "TempleListActivity";
-    private RealmChangeListener realmListener;
     private RecyclerView recyclerView;
 
     /**
@@ -48,8 +48,17 @@ public class TempleListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        Fabric.with(this, new Crashlytics());
+
         DataManager.setUpParseAndRealm(getBaseContext());
-        DataManager.importFromParseIntoRealm(getBaseContext());
+        DataManager.importFromParseIntoRealm(getBaseContext(), new DataManager.ImportFinishedCallback() {
+            @Override
+            public void onImportFinished() {
+                if(recyclerView != null){
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            }
+        });
 
 
         recyclerView = (RecyclerView)findViewById(R.id.temple_list);
@@ -63,13 +72,6 @@ public class TempleListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-
-        realmListener = new RealmChangeListener() {
-            @Override
-            public void onChange() {
-                setupRecyclerView(recyclerView);
-            }
-        };
     }
 
     private void setupRecyclerView(@NonNull final RecyclerView recyclerView) {

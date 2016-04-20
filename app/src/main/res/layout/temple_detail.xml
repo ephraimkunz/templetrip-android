@@ -1,9 +1,36 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/temple_detail"
-    style="?android:attr/textAppearanceLarge"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context="com.ephraimhowardkunz.familymap.templetrip.TempleDetailFragment" />
+    android:layout_width="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/temple_detail_image"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/temple_detail_map_button"
+            android:layout_below="@id/temple_detail_image"
+            android:gravity="center_horizontal"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/temple_detail_web_button"
+            android:layout_below="@id/temple_detail_map_button"
+            android:gravity="center_horizontal"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/temple_detail_web_button"
+            android:id="@+id/temple_detail_services_text"
+            android:gravity="center_horizontal"/>
+
+    </RelativeLayout>
+
+</ScrollView>
+

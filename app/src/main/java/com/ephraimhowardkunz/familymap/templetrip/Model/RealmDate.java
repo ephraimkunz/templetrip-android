@@ -38,8 +38,7 @@ public class RealmDate extends RealmObject {
 
     @Override
     public String toString(){
-        if(date != null)
-            return DateFormat.getDateInstance().format(date);
-        return "date is null";
+        assert date != null;
+        return DateFormat.getDateInstance().format(date);
     }
 }

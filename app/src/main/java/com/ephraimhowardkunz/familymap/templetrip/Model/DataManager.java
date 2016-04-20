@@ -1,7 +1,11 @@
 package com.ephraimhowardkunz.familymap.templetrip.Model;
 
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.ephraimhowardkunz.familymap.templetrip.R;
 import com.parse.FindCallback;
@@ -10,23 +14,31 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 /**
  * Created by apple on 4/19/16.
  */
 public class DataManager {
     private final static String TAG = "DataManager";
+    private static final String DEFAULT_DIRECTORY = "imageDirectory";
     private static boolean realmInitialized = false;
     private static boolean parseInitialized = false;
 
-    public static void importFromParseIntoRealm(final Context context){
+    public interface ImportFinishedCallback{
+        void onImportFinished();
+    }
+
+    public static void importFromParseIntoRealm(final Context context, final ImportFinishedCallback callback){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Temple");
         query.setLimit(500);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -40,6 +52,7 @@ public class DataManager {
                 else{
                     Log.e(TAG, "Failed to fetch temples from Parse");
                 }
+                callback.onImportFinished();
             }
         });
     }
@@ -54,8 +67,7 @@ public class DataManager {
     }
 
     public static List<Temple> getAllTemplesFromRealm(Context context){
-        RealmResults<Temple> allTemples = Realm.getDefaultInstance().allObjects(Temple.class);
-        allTemples.sort("name", Sort.ASCENDING);
+        RealmResults<Temple> allTemples = Realm.getDefaultInstance().where(Temple.class).findAllSorted("name");
 
         List<Temple> results = new ArrayList<>();
         for(int i = 0; i < allTemples.size(); ++i){
@@ -87,5 +99,55 @@ public class DataManager {
                     .build());
         }
         parseInitialized = true;
+    }
+
+    public static void getTempleImage(Context context, ImageView imageView, Temple temple){
+        if(temple.getLocalImagePath() == null){
+            //Fetch from web and cache
+            new DownloadImageTask(context, imageView, temple.getId()).execute(temple.getImageLink());
+        }
+        else{
+            //Fetch from local cache
+            Bitmap bitmap = loadImageFromStorage(temple.getLocalImagePath());
+            imageView.setImageBitmap(bitmap);
+        }
+    }
+
+    public static void saveToInternalStorage(Context context, Bitmap bitmapImage, String templeId){
+        ContextWrapper cw = new ContextWrapper(context);
+        Temple temple = Realm.getDefaultInstance().where(Temple.class).equalTo("id", templeId).findFirst();
+
+        // path to /data/data/yourapp/app_data/DEFAULT_DIRECTORY
+        File directory = cw.getDir(DEFAULT_DIRECTORY, Context.MODE_PRIVATE);
+        String imageName = temple.getName().replace(' ', '_') + ".png";
+        File mypath = new File(directory,imageName);
+
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Realm.getDefaultInstance().beginTransaction();
+        temple.setLocalImagePath(mypath.toString());
+        Realm.getDefaultInstance().commitTransaction();
+    }
+
+    private static Bitmap loadImageFromStorage(String path)
+    {;
+        try {
+            File f = new File(path);
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            return b;
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
