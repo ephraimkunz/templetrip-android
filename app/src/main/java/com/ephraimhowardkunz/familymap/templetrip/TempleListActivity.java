@@ -12,10 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.ephraimhowardkunz.familymap.templetrip.Model.ParseImporter;
-import com.ephraimhowardkunz.familymap.templetrip.dummy.DummyContent;
+import com.ephraimhowardkunz.familymap.templetrip.Model.DataManager;
+import com.ephraimhowardkunz.familymap.templetrip.Model.Temple;
+import com.ephraimhowardkunz.familymap.templetrip.View.SimpleDividerItemDecoration;
 
 import java.util.List;
+
+import io.realm.RealmChangeListener;
 
 /**
  * An activity representing a list of Temples. This activity
@@ -27,6 +30,8 @@ import java.util.List;
  */
 public class TempleListActivity extends AppCompatActivity {
     private final String TAG = "TempleListActivity";
+    private RealmChangeListener realmListener;
+    private RecyclerView recyclerView;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -43,9 +48,11 @@ public class TempleListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        ParseImporter.importFromParseIntoRealm(getBaseContext());
+        DataManager.setUpParseAndRealm(getBaseContext());
+        DataManager.importFromParseIntoRealm(getBaseContext());
 
-        View recyclerView = findViewById(R.id.temple_list);
+
+        recyclerView = (RecyclerView)findViewById(R.id.temple_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
@@ -56,18 +63,26 @@ public class TempleListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
+        realmListener = new RealmChangeListener() {
+            @Override
+            public void onChange() {
+                setupRecyclerView(recyclerView);
+            }
+        };
     }
 
     private void setupRecyclerView(@NonNull final RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DummyContent.ITEMS));
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getBaseContext()));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DataManager.getAllTemplesFromRealm(getBaseContext())));
     }
 
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<Temple> mValues;
 
-        public SimpleItemRecyclerViewAdapter(List<DummyContent.DummyItem> items) {
+        public SimpleItemRecyclerViewAdapter(List<Temple> items) {
             mValues = items;
         }
 
@@ -81,15 +96,15 @@ public class TempleListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mNameView.setText(mValues.get(position).getName());
+            holder.mDedicationView.setText(mValues.get(position).getDedication().toString());
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(TempleDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        arguments.putString(TempleDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
                         TempleDetailFragment fragment = new TempleDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -98,7 +113,7 @@ public class TempleListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, TempleDetailActivity.class);
-                        intent.putExtra(TempleDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        intent.putExtra(TempleDetailFragment.ARG_ITEM_ID, holder.mItem.getId());
 
                         context.startActivity(intent);
                     }
@@ -113,20 +128,20 @@ public class TempleListActivity extends AppCompatActivity {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public final View mView;
-            public final TextView mIdView;
-            public final TextView mContentView;
-            public DummyContent.DummyItem mItem;
+            public final TextView mNameView;
+            public final TextView mDedicationView;
+            public Temple mItem;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mIdView = (TextView) view.findViewById(R.id.id);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mNameView = (TextView) view.findViewById(R.id.temple_name);
+                mDedicationView = (TextView) view.findViewById(R.id.temple_dedication_date);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mContentView.getText() + "'";
+                return super.toString() + " '" + mNameView.getText() + "'";
             }
         }
     }

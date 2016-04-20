@@ -10,11 +10,14 @@ import java.util.Iterator;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by apple on 4/19/16.
  */
 public class Temple extends RealmObject {
+    @PrimaryKey
+    private String id;
     private String name;
     private String webViewUrl;
     private RealmDate dedication;
@@ -44,6 +47,7 @@ public class Temple extends RealmObject {
         this.setPlace(o.getString("place"));
         this.setFirstLetter(o.getString("name").substring(0, 1));
         this.setDedication(new RealmDate(o.getString("dedication")));
+        this.setId(o.getObjectId());
 
        // this.localImagePath
         this.isFavorite = false;
@@ -77,6 +81,14 @@ public class Temple extends RealmObject {
         catch (JSONException ex){
             assert false; // We must have bad json data on the server. Fix it.
         }
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getImageLink() {

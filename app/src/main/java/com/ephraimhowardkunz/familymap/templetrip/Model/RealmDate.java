@@ -2,6 +2,7 @@ package com.ephraimhowardkunz.familymap.templetrip.Model;
 
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,13 +26,20 @@ public class RealmDate extends RealmObject {
     public RealmDate(String dateString) {
 
         try {
-            //2000-10-01T00:00:00
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-ddTHH:mm:ss");
+            //2000-10-01
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             date = format.parse(dateString);
         }
         catch(ParseException pe) {
             Log.w(TAG, String.format("Error parsing date string {0} into date", dateString));
             //throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public String toString(){
+        if(date != null)
+            return DateFormat.getDateInstance().format(date);
+        return "date is null";
     }
 }
