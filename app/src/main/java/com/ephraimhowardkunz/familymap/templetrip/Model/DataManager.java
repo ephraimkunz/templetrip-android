@@ -138,7 +138,7 @@ public class DataManager {
     }
 
     private static Bitmap loadImageFromStorage(String path)
-    {;
+    {
         try {
             File f = new File(path);
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
