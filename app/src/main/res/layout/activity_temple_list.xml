@@ -24,8 +24,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <android.support.v7.widget.SearchView
+                android:id="@+id/search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.SearchView>
+            <include layout="@layout/temple_list" />
+        </LinearLayout>
 
-        <include layout="@layout/temple_list" />
     </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

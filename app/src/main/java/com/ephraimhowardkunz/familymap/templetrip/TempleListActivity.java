@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,24 @@ public class TempleListActivity extends AppCompatActivity {
 
         Fabric.with(this, new Crashlytics());
 
+        final SearchView searchView = (SearchView)findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                SimpleItemRecyclerViewAdapter newAdapter = getFilteredItemsAdapter(query);
+                recyclerView.swapAdapter(newAdapter, true);
+                searchView.clearFocus();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                SimpleItemRecyclerViewAdapter newAdapter = getFilteredItemsAdapter(newText);
+                recyclerView.swapAdapter(newAdapter, true);
+                return true;
+            }
+        });
+
         DataManager.setUpParseAndRealm(getBaseContext());
         DataManager.importFromParseIntoRealm(getBaseContext(), new DataManager.ImportFinishedCallback() {
             @Override
@@ -63,7 +82,7 @@ public class TempleListActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView)findViewById(R.id.temple_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView(recyclerView);
 
         if (findViewById(R.id.temple_detail_container) != null) {
             // The detail container view will be present only in the
@@ -77,6 +96,16 @@ public class TempleListActivity extends AppCompatActivity {
     private void setupRecyclerView(@NonNull final RecyclerView recyclerView) {
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(getBaseContext()));
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(DataManager.getAllTemplesFromRealm(getBaseContext())));
+    }
+
+    private SimpleItemRecyclerViewAdapter getFilteredItemsAdapter(String filterText){
+        if(filterText.equals("") || filterText.equals(" ")){
+            return new SimpleItemRecyclerViewAdapter(DataManager.getAllTemplesFromRealm(getBaseContext()));
+        }
+        else {
+            List<Temple> filteredTemples = DataManager.getTemplesByFilterText(filterText);
+            return new SimpleItemRecyclerViewAdapter(filteredTemples);
+        }
     }
 
     public class SimpleItemRecyclerViewAdapter

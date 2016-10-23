@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
@@ -68,10 +69,21 @@ public class DataManager {
 
     public static List<Temple> getAllTemplesFromRealm(Context context){
         RealmResults<Temple> allTemples = Realm.getDefaultInstance().where(Temple.class).findAllSorted("name");
+        return convertRealmResultsToArrayList(allTemples);
+    }
 
+    public static List<Temple> getTemplesByFilterText(String filterText){
+        RealmResults<Temple> filtered = Realm.getDefaultInstance()
+                .where(Temple.class)
+                .contains("name", filterText, Case.INSENSITIVE)
+                .findAllSorted("name");
+        return convertRealmResultsToArrayList(filtered);
+    }
+
+    public static List<Temple> convertRealmResultsToArrayList(RealmResults<Temple> realmResults){
         List<Temple> results = new ArrayList<>();
-        for(int i = 0; i < allTemples.size(); ++i){
-            results.add(allTemples.get(i));
+        for(int i = 0; i < realmResults.size(); ++i){
+            results.add(realmResults.get(i));
         }
         return results;
     }
