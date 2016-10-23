@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ephraimhowardkunz.familymap.templetrip.Model.DataManager;
 import com.ephraimhowardkunz.familymap.templetrip.Model.Temple;
+
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * A fragment representing a single Temple detail screen.
@@ -69,7 +73,6 @@ public class TempleDetailFragment extends Fragment {
         DataManager.getTempleImage(getContext(), imageView, mItem);
 
         Button mapButton = (Button)rootView.findViewById(R.id.temple_detail_map_button);
-        mapButton.setText(mItem.getAddress());
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +84,6 @@ public class TempleDetailFragment extends Fragment {
         });
 
         Button webButton = (Button)rootView.findViewById(R.id.temple_detail_web_button);
-        webButton.setText(mItem.getWebViewUrl());
         webButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,5 +98,30 @@ public class TempleDetailFragment extends Fragment {
                 }
             }
         });
+
+        Button phoneButton = (Button)rootView.findViewById(R.id.temple_detail_phone_button);
+        phoneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String phone = mItem.getTelephone();
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phone, null));
+                startActivity(intent);
+            }
+        });
+
+        TextView dedicatoryPrayer = (TextView) rootView.findViewById(R.id.dedicatory_text_view);
+        dedicatoryPrayer.setText(Html.fromHtml(cleanupDedicatoryPrayer(mItem.getDedicatoryPrayer())));
+    }
+
+    private String cleanupDedicatoryPrayer(String originalDed){
+        String removeCommaEscapes = originalDed.replaceAll("\\\\\"", "\""); //Crazy escapes, eh?
+        try{
+            return StringEscapeUtils.unescapeJava(removeCommaEscapes); //Fixed !!! How does this library work?
+        }
+        catch(Exception ex){
+            assert false;
+            ex.printStackTrace();
+        }
+        return "";
     }
 }

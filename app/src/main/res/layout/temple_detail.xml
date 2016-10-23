@@ -1,36 +1,47 @@
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ImageView
+            android:adjustViewBounds="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/temple_detail_image"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/temple_detail_map_button"
-            android:layout_below="@id/temple_detail_image"
-            android:gravity="center_horizontal"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/temple_detail_web_button"
-            android:layout_below="@id/temple_detail_map_button"
-            android:gravity="center_horizontal"
-            />
-        <TextView
+        <LinearLayout
+            android:background="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/temple_detail_web_button"
-            android:id="@+id/temple_detail_services_text"
-            android:gravity="center_horizontal"/>
-
-    </RelativeLayout>
-
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/temple_detail_web_button"
+                android:drawableTop="@drawable/globe"
+                android:text="@string/website_button"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/temple_detail_phone_button"
+                android:drawableTop="@drawable/phone"
+                android:text="@string/call_button"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/temple_detail_map_button"
+                android:drawableTop="@drawable/directions"
+                android:text="@string/map_button"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/dedicatory_text_view"
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </ScrollView>
 

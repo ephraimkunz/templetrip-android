@@ -43,6 +43,7 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
+    compile 'org.apache.commons:commons-lang3:3.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }

@@ -31,6 +31,7 @@ public class Temple extends RealmObject {
     private String telephone;
     private String firstLetter;
     private String localImagePath;
+    private String dedicatoryPrayer;
     private boolean isFavorite;
     private boolean hasCafeteria;
     private boolean hasClothing;
@@ -52,6 +53,7 @@ public class Temple extends RealmObject {
         this.setFirstLetter(o.getString("name").substring(0, 1));
         this.setDedication(o.getString("dedication"));
         this.setId(o.getObjectId());
+        this.setDedicatoryPrayer(o.getString("prayer"));
 
        // this.localImagePath
         this.isFavorite = false;
@@ -115,6 +117,8 @@ public class Temple extends RealmObject {
         return webViewUrl;
     }
 
+    public String getDedicatoryPrayer() { return dedicatoryPrayer;}
+
     public void setWebViewUrl(String webViewUrl) {
         this.webViewUrl = webViewUrl;
     }
@@ -139,6 +143,8 @@ public class Temple extends RealmObject {
     public String getPlace() {
         return place;
     }
+
+    public void setDedicatoryPrayer(String dedicatoryPrayer){this.dedicatoryPrayer = dedicatoryPrayer;}
 
     public void setPlace(String place) {
         this.place = place;
