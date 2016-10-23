@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -52,6 +53,7 @@ public class TempleListActivity extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
 
         final SearchView searchView = (SearchView)findViewById(R.id.search_view);
+        searchView.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
