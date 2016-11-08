@@ -30,6 +30,7 @@ public class TempleDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final int DEFAULT_VISIBLE_TEXT_LINES = 5;
 
     /**
      * The dummy content this fragment is presenting.
@@ -109,8 +110,19 @@ public class TempleDetailFragment extends Fragment {
             }
         });
 
-        TextView dedicatoryPrayer = (TextView) rootView.findViewById(R.id.dedicatory_text_view);
+        final TextView dedicatoryPrayer = (TextView) rootView.findViewById(R.id.dedicatory_text_view);
         dedicatoryPrayer.setText(Html.fromHtml(cleanupDedicatoryPrayer(mItem.getDedicatoryPrayer())));
+        dedicatoryPrayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dedicatoryPrayer.getMaxLines() != Integer.MAX_VALUE){
+                    dedicatoryPrayer.setMaxLines(Integer.MAX_VALUE);
+                }
+                else{
+                    dedicatoryPrayer.setMaxLines(DEFAULT_VISIBLE_TEXT_LINES);
+                }
+            }
+        });
     }
 
     private String cleanupDedicatoryPrayer(String originalDed){
