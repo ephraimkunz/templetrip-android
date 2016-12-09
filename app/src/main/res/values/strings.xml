@@ -8,4 +8,6 @@
     <string name="map_button">Navigate</string>
     <string name="website_button">Website</string>
     <string name="call_button">Call</string>
+
+    <string name="schedule_menu_item_title">Schedule</string>
 </resources>
