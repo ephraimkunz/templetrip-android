@@ -1,5 +1,6 @@
 package com.ephraimhowardkunz.familymap.templetrip;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -8,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 /**
  * An activity representing a single Temple detail screen. This
@@ -69,7 +69,9 @@ public class TempleDetailActivity extends AppCompatActivity {
                 navigateUpTo(new Intent(this, TempleListActivity.class));
                 return true;
             case R.id.schedule_menu_item:
-                Toast.makeText(this, "You pressed the schedule button", Toast.LENGTH_SHORT).show();
+                ScheduleFragment scheduleFragment = new ScheduleFragment();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                scheduleFragment.show(ft, "sheduleFragment");
             default:
                 return super.onOptionsItemSelected(item);
         }
