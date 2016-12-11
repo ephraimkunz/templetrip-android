@@ -125,6 +125,10 @@ public class TempleDetailFragment extends Fragment {
         });
     }
 
+    public String getSelectedTempleId(){
+        return mItem.getId();
+    }
+
     private String cleanupDedicatoryPrayer(String originalDed){
         String removeCommaEscapes = originalDed.replaceAll("\\\\\"", "\""); //Crazy escapes, eh?
         try{

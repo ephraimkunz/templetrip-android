@@ -31,7 +31,7 @@ public class RealmDate extends RealmObject {
             date = format.parse(dateString);
         }
         catch(ParseException pe) {
-            Log.w(TAG, String.format("Error parsing date string {0} into date", dateString));
+            Log.w(TAG, String.format("Error parsing date string %s into date", dateString));
             //throw new IllegalArgumentException();
         }
     }

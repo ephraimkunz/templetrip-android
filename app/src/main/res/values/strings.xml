@@ -12,7 +12,15 @@
     <string name="schedule_menu_item_title">Schedule</string>
     <string name="create_button_text">Create</string>
     <string name="cancel_button_text">Cancel</string>
+    <string name="schedule_title_hint">Title of event</string>
+    <string name="schedule_location_hint">Location of event</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="day_array">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
 </resources>

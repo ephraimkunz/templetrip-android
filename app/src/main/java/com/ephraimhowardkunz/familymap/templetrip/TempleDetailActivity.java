@@ -17,6 +17,7 @@ import android.view.MenuItem;
  * in a {@link TempleListActivity}.
  */
 public class TempleDetailActivity extends AppCompatActivity {
+    TempleDetailFragment detailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +47,10 @@ public class TempleDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(TempleDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(TempleDetailFragment.ARG_ITEM_ID));
-            TempleDetailFragment fragment = new TempleDetailFragment();
-            fragment.setArguments(arguments);
+            detailFragment = new TempleDetailFragment();
+            detailFragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.temple_detail_container, fragment)
+                    .add(R.id.temple_detail_container, detailFragment)
                     .commit();
         }
     }
@@ -70,12 +71,13 @@ public class TempleDetailActivity extends AppCompatActivity {
                 return true;
             case R.id.schedule_menu_item:
                 ScheduleFragment scheduleFragment = new ScheduleFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(TempleDetailFragment.ARG_ITEM_ID, detailFragment.getSelectedTempleId());
+                scheduleFragment.setArguments(bundle);
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
-                scheduleFragment.show(ft, "sheduleFragment");
+                scheduleFragment.show(ft, "scheduleFragment");
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 }
