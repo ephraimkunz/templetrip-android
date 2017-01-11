@@ -64,6 +64,12 @@ public class DataManager {
         Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(temple);
+
+        //Make sure to add composed object to Realm
+        for(int i = 0; i < temple.getEndowmentSchedule().size(); ++i){
+            realm.copyToRealm(temple.getEndowmentSchedule().get(i));
+        }
+
         realm.commitTransaction();
     }
 

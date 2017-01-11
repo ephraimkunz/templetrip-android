@@ -2,7 +2,6 @@ package com.ephraimhowardkunz.familymap.templetrip.Model;
 
 import com.parse.ParseObject;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,8 +59,9 @@ public class Temple extends RealmObject {
         this.existsOnServer = true;
 
         try {
-            this.hasCafeteria = !o.getJSONObject("servicesAvailable").getString("Cafeteria").contains("No");
-            this.hasClothing = !o.getJSONObject("servicesAvailable").getString("Clothing").contains("No");
+            //Don't need this information right now, and it doesn't exist on announced temples
+//            this.hasCafeteria = !o.getJSONObject("servicesAvailable").getString("Cafeteria").contains("No");
+//            this.hasClothing = !o.getJSONObject("servicesAvailable").getString("Clothing").contains("No");
 
             this.endowmentSchedule = new RealmList<>();
             JSONObject scheduleDict = o.getJSONObject("endowmentSchedule");
@@ -72,16 +72,17 @@ public class Temple extends RealmObject {
                 endowmentSchedule.add(dictObj);
             }
 
-            closedDates = new RealmList<>();
-            JSONObject closedDateArrays = o.getJSONObject("closures");
-            JSONArray maintenance = closedDateArrays.getJSONArray("Maintenance Dates");
-            for(int i = 0; i < maintenance.length(); ++i){
-                closedDates.add(new RealmDate(maintenance.getString(i)));
-            }
-            JSONArray other = closedDateArrays.getJSONArray("Other Dates");
-            for(int i = 0; i < other.length(); ++i){
-                closedDates.add(new RealmDate(other.getString(i)));
-            }
+            //Not using these right now, and Announced temples don't have it
+//            closedDates = new RealmList<>();
+//            JSONObject closedDateArrays = o.getJSONObject("closures");
+//            JSONArray maintenance = closedDateArrays.getJSONArray("Maintenance Dates");
+//            for(int i = 0; i < maintenance.length(); ++i){
+//                closedDates.add(new RealmDate(maintenance.getString(i)));
+//            }
+//            JSONArray other = closedDateArrays.getJSONArray("Other Dates");
+//            for(int i = 0; i < other.length(); ++i){
+//                closedDates.add(new RealmDate(other.getString(i)));
+//            }
 
         }
         catch (JSONException ex){

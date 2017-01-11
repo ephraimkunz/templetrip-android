@@ -130,11 +130,11 @@ public class TempleDetailFragment extends Fragment {
     }
 
     private String cleanupDedicatoryPrayer(String originalDed){
-        String removeCommaEscapes = originalDed.replaceAll("\\\\\"", "\""); //Crazy escapes, eh?
         try{
+            String removeCommaEscapes = originalDed.replaceAll("\\\\\"", "\""); //Crazy escapes, eh?
             return StringEscapeUtils.unescapeJava(removeCommaEscapes); //Fixed !!! How does this library work?
         }
-        catch(Exception ex){
+        catch(Exception ex){ //Exception handler takes care of the case where originalDed is null
             assert false;
             ex.printStackTrace();
         }
