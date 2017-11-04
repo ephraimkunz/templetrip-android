@@ -100,7 +100,8 @@ public class DataManager {
 
     public static void setUpParseAndRealm(Context context){
         if(!realmInitialized) {
-            RealmConfiguration config = new RealmConfiguration.Builder(context)
+            Realm.init(context);
+            RealmConfiguration config = new RealmConfiguration.Builder()
                     .deleteRealmIfMigrationNeeded() //TODO: Change this in production
                     .build();
             Realm.setDefaultConfiguration(config);
